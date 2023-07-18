@@ -23,9 +23,12 @@ public partial class SeaExpenContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-A841BJ8;Database=SeaExpen;Trusted_Connection=True; TrustServerCertificate=True;");
+        => //optionsBuilder.UseSqlServer("Server=DESKTOP-A841BJ8;Database=SeaExpen;Trusted_Connection=True; TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer("Server=SeaExpenDB.mssql.somee.com; Database=SeaExpenDB;user id=SeaExpen_CS_SQLLogin_1;pwd=5a2oc8a5if; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

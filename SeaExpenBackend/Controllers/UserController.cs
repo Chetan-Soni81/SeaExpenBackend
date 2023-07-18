@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SeaExpenBackend.DB;
@@ -57,6 +58,7 @@ namespace SeaExpenBackend.Controllers
             using(var context = new SeaExpenContext())
             {
                 var user = context.Users.FirstOrDefault(x => x.Username == model.Username);
+                //var user = context.Users.FirstOrDefault(x => (x.Username).Equals(model.Username));
 
                 if (user != null && user.Password == model.Password)
                 {
@@ -78,7 +80,7 @@ namespace SeaExpenBackend.Controllers
                         {
                             Subject = new ClaimsIdentity(claims),
                             Expires = DateTime.UtcNow.AddDays(1),
-                            Issuer = "https://localhost:7121",
+                            Issuer = "http://seaexpen.somee.com",
                             Audience = "*",
                             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
                         };
@@ -115,7 +117,7 @@ namespace SeaExpenBackend.Controllers
             {
                 using( var context = new SeaExpenContext())
                 {
-                    var user = context.Users.SingleOrDefault(x => x.Username == model.Username);
+                    var user = context.Users.FirstOrDefault(x => Convert.ToBoolean(x.Username.CompareTo(model.Username)));
 
                     if (user != null)
                     {
@@ -141,6 +143,7 @@ namespace SeaExpenBackend.Controllers
 
         [Route("userid")]
         [HttpGet]
+        [Authorize(Roles = "User,Admin")]
         public  IActionResult Get()
         {
             try

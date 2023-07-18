@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeaExpenBackend.DB;
@@ -25,7 +26,19 @@ namespace SeaExpenBackend.Controllers
             return Ok(categories);
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public IActionResult GetById(int id)
+        {
+            using (var context = new SeaExpenContext())
+            {
+                var data = context.ExpenseCategories.SingleOrDefault(c => c.Id == id);
+                return Ok(data);
+            }
+        }
+
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Post(ExpenseCategoryModel category)
         {
             if (!ModelState.IsValid)
@@ -49,6 +62,7 @@ namespace SeaExpenBackend.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put(ExpenseCategoryModel category)
         {
             if (!ModelState.IsValid)
@@ -71,7 +85,8 @@ namespace SeaExpenBackend.Controllers
             
         }
 
-        [HttpDelete] 
+        [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             try
@@ -85,17 +100,6 @@ namespace SeaExpenBackend.Controllers
             catch
             {
                 return StatusCode(500, new { error = "Server Error" });
-            }
-        }
-
-        [Route("{id}")]
-        [HttpGet]
-        public IActionResult GetById(int id)
-        {
-            using (var context = new SeaExpenContext())
-            {
-                var data = context.ExpenseCategories.SingleOrDefault(c => c.Id == id);
-                return Ok(data);
             }
         }
     }
