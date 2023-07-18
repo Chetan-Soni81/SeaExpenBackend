@@ -15,10 +15,12 @@ namespace SeaExpenBackend.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            var userid = Convert.ToInt32(HttpContext.User.Claims.First(x => x.Type == "UserId").Value);
             using (var context = new SeaExpenContext())
             {
                 var data = from a in context.Expenses
                            join c in context.ExpenseCategories on a.Category equals c.Id
+                           where a.UserId == userid
                            select new ExpenseModel
                            {
                                Id = a.Id,
