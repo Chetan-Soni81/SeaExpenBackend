@@ -9,16 +9,18 @@ namespace SeaExpenBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "User")]
     public class ExpenseController : ControllerBase
     {
         [HttpGet]
+        [Authorize(Roles = "User")]
         public IActionResult Get()
         {
+            var userid = HttpContext.User.Claims.First(i => i.Type == "UserId").Value;
             using (var context = new SeaExpenContext())
             {
                 var data = from a in context.Expenses
                            join c in context.ExpenseCategories on a.Category equals c.Id
+                           where a.UserId == Convert.ToInt32(userid)
                            select new ExpenseModel
                            {
                                Id = a.Id,
@@ -26,6 +28,7 @@ namespace SeaExpenBackend.Controllers
                                CategoryName = c.Category,
                                Amount = a.Amount,
                                RecordedDate = a.ExpenseDate,
+                               Note = a.Note,
                                UserId = a.UserId,
                            };
                 
@@ -48,6 +51,7 @@ namespace SeaExpenBackend.Controllers
                                CategoryName = c.Category,
                                Amount = a.Amount,
                                RecordedDate = a.ExpenseDate,
+                               Note = a.Note,
                                UserId = a.UserId,
                            }).SingleOrDefault();
 
@@ -57,6 +61,7 @@ namespace SeaExpenBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public IActionResult Post([FromBody] ExpenseModel model)
         {
             if(!ModelState.IsValid)
@@ -68,7 +73,7 @@ namespace SeaExpenBackend.Controllers
 
             using (var context = new SeaExpenContext())
             {
-                var i = context.Database.ExecuteSql($"exec usp_Manage_Expense @Action=1, @Category={model.Category}, @Amount={model.Amount}, @UserId={userid}");
+                var i = context.Database.ExecuteSql($"exec usp_Manage_Expense @Action=1, @Category={model.Category}, @Amount={model.Amount}, @Note={model.Note}, @UserId={userid}");
 
                 if(i != 0)
                 {
@@ -88,7 +93,7 @@ namespace SeaExpenBackend.Controllers
 
             using (var context = new SeaExpenContext())
             {
-                var i = context.Database.ExecuteSql($"exec usp_Manage_Expense @Action=2, @Category={model.Category}, @Amount={model.Amount}, @UserId={userid}, @Id={model.Id}");
+                var i = context.Database.ExecuteSql($"exec usp_Manage_Expense @Action=2, @Category={model.Category}, @Amount={model.Amount}, @Note={model.Note}, @UserId={userid}, @Id={model.Id}");
                 
                 if(i != 0)
                 {

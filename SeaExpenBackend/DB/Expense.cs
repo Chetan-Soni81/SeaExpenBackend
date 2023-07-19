@@ -17,6 +17,8 @@ public partial class Expense
 
     public int UserId { get; set; }
 
+    public string? Note { get; set; }
+
     public virtual ExpenseCategory CategoryNavigation { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

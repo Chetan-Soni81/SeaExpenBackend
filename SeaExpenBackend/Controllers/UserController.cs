@@ -57,7 +57,7 @@ namespace SeaExpenBackend.Controllers
 
             using(var context = new SeaExpenContext())
             {
-                var user = context.Users.FirstOrDefault(x => x.Username == model.Username);
+                var user = context.Users.FirstOrDefault(x => x.Username.Equals(model.Username));
                 //var user = context.Users.FirstOrDefault(x => (x.Username).Equals(model.Username));
 
                 if (user != null && user.Password == model.Password)
@@ -98,7 +98,7 @@ namespace SeaExpenBackend.Controllers
                     
                 }
 
-                return BadRequest(new { error = "Invalid Credentials" });
+                return Unauthorized(new { error = "Invalid Credentials" });
             }
         }
 
@@ -110,14 +110,12 @@ namespace SeaExpenBackend.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-
-
+        
             try
             {
                 using( var context = new SeaExpenContext())
                 {
-                    var user = context.Users.FirstOrDefault(x => Convert.ToBoolean(x.Username.CompareTo(model.Username)));
+                    var user = context.Users.FirstOrDefault(x => x.Username.Equals(model.Username));
 
                     if (user != null)
                     {
@@ -149,7 +147,8 @@ namespace SeaExpenBackend.Controllers
             try
             {
                 var val = HttpContext.User.Claims.First(i => i.Type == "UserId").Value.ToString();
-                return Ok(new { message = $"User id: {val}" });
+                var role = HttpContext.User.Claims.First(i => i.Type == ClaimTypes.Role).Value.ToString();
+                return Ok(new { message = $"User id: {val}, Role: {role} " });
 
             } catch (Exception ex)
             {

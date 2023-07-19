@@ -11,6 +11,7 @@ namespace SeaExpenBackend.Models
         [Required(ErrorMessage ="Amount is required.")]
         public double? Amount { get; set; }
         public DateTime? RecordedDate { get; set; }
+        public string? Note { get; set; }
         public int? UserId { get; set; }
     }
 }
