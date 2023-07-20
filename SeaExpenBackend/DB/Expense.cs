@@ -11,7 +11,7 @@ public partial class Expense
 
     public double Amount { get; set; }
 
-    public DateTime ExpenseDate { get; set; }
+    public DateTimeOffset? ExpenseDate { get; set; }
 
     public bool? IsDelete { get; set; }
 

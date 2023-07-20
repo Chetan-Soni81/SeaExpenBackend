@@ -10,7 +10,7 @@ namespace SeaExpenBackend.Models
         public string? CategoryName { get; set; }
         [Required(ErrorMessage ="Amount is required.")]
         public double? Amount { get; set; }
-        public DateTime? RecordedDate { get; set; }
+        public DateTimeOffset? RecordedDate { get; set; }
         public string? Note { get; set; }
         public int? UserId { get; set; }
     }
