@@ -119,7 +119,7 @@ namespace SeaExpenBackend.Controllers
 
                     if (user != null)
                     {
-                        return BadRequest(new {error="Already exists"});
+                        return BadRequest(new {error="Username already exists."});
                     }
 
                     user = null;
@@ -128,10 +128,10 @@ namespace SeaExpenBackend.Controllers
 
                     if(i != 0)
                     {
-                        return Ok(new { message = "User created successful." });
+                        return Ok(new { message = "User registration successful." });
                     }
 
-                    return BadRequest(new {message = "User creation failed"});
+                    return BadRequest(new {message = "User registration failed"});
                 }
             } catch (Exception ex)
             {
